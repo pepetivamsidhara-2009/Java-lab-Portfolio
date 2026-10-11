@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java Lab Assignments Portfolio</title>
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: rgba(18, 26, 43, 0.75);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; line-height: 1.6; }
+    .container { max-width: 1150px; margin: 0 auto; }
+
+    /* HEADER STYLING */
+    header {
+      background: linear-gradient(135deg, rgba(23, 31, 51, 0.85) 0%, rgba(13, 18, 33, 0.95) 100%);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px 36px;
+      margin-bottom: 28px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+    }
+
+    .main-title-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--card-border); padding-bottom: 16px; margin-bottom: 22px;
+      flex-wrap: wrap; gap: 12px;
+    }
+
+    .main-title-bar h1 {
+      font-size: 2.1rem; font-weight: 800; letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #ffffff 30%, #93c5fd 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .badge-course {
+      background: rgba(59, 130, 246, 0.15); color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3); padding: 5px 14px;
+      border-radius: 20px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px;
+    }
+
+    .header-body { display: flex; gap: 28px; align-items: center; }
+    .profile-img-container { position: relative; width: 110px; height: 110px; flex-shrink: 0; }
+    .profile-img { 
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover; 
+      border: 3px solid var(--accent); box-shadow: 0 0 20px var(--accent-glow); background: #111827;
+    }
+
+    .details-wrapper { flex-grow: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .details-block { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 18px; }
+
+    .details-block-title {
+      font-size: 0.72rem; font-weight: 800; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;
+      border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px;
+    }
+
+    .info-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+    .info-row { display: flex; justify-content: space-between; font-size: 0.88rem; }
+    .info-label { color: var(--text-muted); font-size: 0.83rem; }
+    .info-value { color: #fff; font-weight: 600; text-align: right; }
+
+    .action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
+    .search-box { background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 16px; border-radius: 10px; color: #fff; width: 280px; font-size: 0.9rem; }
+    .search-box:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+    
+    .btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+    .btn:hover { background: var(--accent-hover); box-shadow: 0 0 15px var(--accent-glow); }
+    .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--card-border); padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.2s; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--text-muted); }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); padding: 5px 10px; font-size: 0.78rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .btn-danger:hover { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+
+    /* CARD GRID */
+    .assignment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; transition: transform 0.3s, border-color 0.3s; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
+    .card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .card-week { font-size: 0.78rem; font-weight: 700; color: #93c5fd; text-transform: uppercase; letter-spacing: 1px; background: rgba(59, 130, 246, 0.15); padding: 3px 10px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .card-title { font-size: 1.15rem; font-weight: 600; color: #fff; margin: 10px 0 6px 0; }
+    .card-desc { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px; flex-grow: 1; line-height: 1.5; }
+
+    /* DETAIL VIEW MODAL */
+    .detail-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 9998; }
+    .detail-overlay.active { display: flex; }
+    .detail-card-box {
+      background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px;
+      width: 90vw; max-width: 650px; padding: 28px; position: relative; color: #fff;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9); display: flex; flex-direction: column; gap: 16px;
+    }
+
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content; transition: color 0.2s; }
+    .back-btn:hover { color: #fff; }
+
+    .detail-week-header { font-size: 1.8rem; font-weight: 800; color: #60a5fa; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+    .detail-aim { font-size: 0.9rem; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.5; }
+
+    .concepts-box {
+      background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 10px; padding: 14px 18px; margin: 8px 0;
+    }
+
+    .concepts-text {
+      color: #38bdf8; font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.6;
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .detail-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+
+    /* FULLSCREEN VIEWER OVERLAY */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; }
+    .modal.active { display: flex; flex-direction: column; }
+    
+    .modal-bar {
+      background: #090d16; padding: 0 20px; display: flex;
+      justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--card-border); height: 52px;
+    }
+
+    .modal-title-concept { 
+      font-size: 1.05rem; font-weight: 700; 
+      background: linear-gradient(135deg, #60a5fa 0%, #c084fc 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: 0.4px;
+    }
+
+    .close-btn {
+      background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger);
+      color: #fff; padding: 5px 14px; border-radius: 8px;
+      cursor: pointer; font-weight: 600; font-size: 0.82rem; transition: all 0.2s;
+    }
+    .close-btn:hover { background: var(--danger); }
+    
+    iframe.pdf-viewer-max { width: 100vw; height: calc(100vh - 52px); border: none; background: #070a12; }
+
+    /* ADD DIALOG */
+    .dialog-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 9998; }
+    .dialog-overlay.active { display: flex; }
+    .modal-content-dialog { background: #111827; border: 1px solid var(--card-border); border-radius: 16px; width: 90vw; max-width: 500px; padding: 24px; position: relative; color: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+    .close-btn-dialog { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+
+    @media (max-width: 768px) { 
+      .header-body { flex-direction: column; text-align: center; }
+      .info-row { flex-direction: column; gap: 2px; }
+      .info-value { text-align: center; }
+      .detail-actions-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="main-title-bar">
+      <h1>JAVA LAB ASSIGNMENTS PORTFOLIO</h1>
+      <span class="badge-course">24CS281 • AY 2026-27</span>
+    </div>
+
+    <div class="header-body">
+      <div class="profile-img-container">
+        <img src="my-photo.jpg" id="profileImg" class="profile-img" alt="Student Photo" onerror="this.src='https://via.placeholder.com/120/171f33/ffffff?text=Photo';">
+      </div>
+
+      <div class="details-wrapper">
+        <div class="details-block">
+          <div class="details-block-title">Student Details</div>
+          <div class="info-grid">
+            <div class="info-row"><span class="info-label">Name:</span><span class="info-value">P. VamsiDhara Krishna</span></div>
+            <div class="info-row"><span class="info-label">Roll Number:</span><span class="info-value">25EU02107</span></div>
+            <div class="info-row"><span class="info-label">Branch / Sec:</span><span class="info-value">CSE (AIML-B)</span></div>
+            <div class="info-row"><span class="info-label">Semester:</span><span class="info-value">Semester 3</span></div>
+          </div>
+        </div>
+
+        <div class="details-block">
+          <div class="details-block-title">Course Information</div>
+          <div class="info-grid">
+            <div class="info-row"><span class="info-label">Course Code:</span><span class="info-value">24CS281</span></div>
+            <div class="info-row"><span class="info-label">Instructor:</span><span class="info-value">Ramesh Sir</span></div>
+            <div class="info-row"><span class="info-label">University:</span><span class="info-value">Siddhartha Academy of Higher Education</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="action-bar">
+    <input type="text" class="search-box" id="searchInput" placeholder="Search week or concept..." oninput="filterAssignments()">
+    <button class="btn" onclick="openAddModal()">+ Add New Java Assignment (PDF)</button>
+  </div>
+
+  <div class="assignment-grid" id="assignmentGrid"></div>
+</div>
+
+<!-- STEP 1: INTERMEDIATE DETAILS CARD -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-card-box">
+    <button class="back-btn" onclick="closeDetailCard()">← BACK TO WEEKS</button>
+    
+    <div class="detail-week-header" id="detailWeek">WEEK 1</div>
+    <div class="detail-aim" id="detailAim">AIM: INTRODUCTION TO JAVA INSTALLATION, EXECUTION, AND BASIC PROGRAMMING LANGUAGE COMPARISONS.</div>
+
+    <div class="concepts-box">
+      <div class="concepts-text" id="detailConcepts">CONCEPTS: LANGUAGE COMPARISONS (JAVA VS C / C++ / PYTHON / JS), JDK CONFIGURATION, HELLO WORLD EXECUTION.</div>
+    </div>
+
+    <div class="detail-actions-grid">
+      <button class="btn" onclick="openPdfFromCard()" style="width: 100%;">OPEN DOCUMENT</button>
+      <a id="downloadBtnCard" download="Assignment.pdf" class="btn-secondary">DOWNLOAD FILE</a>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2: FULLSCREEN IMMERSIVE VIEWER -->
+<div class="modal" id="viewModal">
+  <div class="modal-bar">
+    <div class="modal-title-concept" id="modalConceptTitle">Concept Name</div>
+    <button class="close-btn" onclick="closeViewModal()">✕ Close Viewer (Esc)</button>
+  </div>
+  <iframe id="pdfViewer" class="pdf-viewer-max"></iframe>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="dialog-overlay" id="addModal">
+  <div class="modal-content-dialog">
+    <span class="close-btn-dialog" onclick="closeAddModal()">&times;</span>
+    <h2 style="font-size: 1.25rem; margin-bottom: 6px;">Upload Java Lab File</h2>
+    <p style="color: var(--text-muted); font-size: 0.85rem;">Select your PDF containing program solutions.</p>
+    
+    <form id="addForm" style="display: grid; gap: 12px; margin-top: 16px;" onsubmit="saveAssignment(event)">
+      <input type="text" id="addWeek" placeholder="Week Number (e.g., Week 12)" required class="search-box" style="width: 100%;">
+      <input type="text" id="addTitle" placeholder="AIM / Title" required class="search-box" style="width: 100%;">
+      <textarea id="addDesc" placeholder="CONCEPTS..." rows="3" class="search-box" style="width: 100%;"></textarea>
+      <input type="text" id="addPdfUrl" placeholder="File name in folder (e.g. Week-12.pdf)" class="search-box" style="width: 100%;">
+      
+      <div>
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">OR Choose File from computer:</label>
+        <input type="file" id="addPdfFile" accept=".pdf" class="search-box" style="width: 100%; padding: 8px;">
+      </div>
+
+      <button type="submit" class="btn" style="margin-top: 8px;">Save Assignment</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // RELATIVE PATHS FOR ALL 11 WEEKS (ENSURE THESE PDF FILES ARE IN THE SAME FOLDER)
+  const defaultAssignments = [
+    { 
+      id: 1, 
+      week: "WEEK 1", 
+      title: "AIM: INTRODUCTION TO JAVA INSTALLATION, EXECUTION, AND BASIC PROGRAMMING LANGUAGE COMPARISONS.", 
+      desc: "CONCEPTS: LANGUAGE COMPARISONS (JAVA VS C / C++ / PYTHON / JS), JDK CONFIGURATION, HELLO WORLD EXECUTION.", 
+      pdfData: "Week-1.pdf"
+    },
+    { 
+      id: 2, 
+      week: "WEEK 2", 
+      title: "AIM: OPERATORS, TYPE CASTING, AND BASIC CONTROL FLOW LOGIC.", 
+      desc: "CONCEPTS: BITWISE OPERATIONS, TYPE CASTING (WIDENING / NARROWING), ASCII CONVERSIONS, EVEN / ODD LOGIC, FOR LOOPS.", 
+      pdfData: "Week-2.pdf"
+    },
+    { 
+      id: 3, 
+      week: "WEEK 3", 
+      title: "AIM: OBJECT ORIENTED PROGRAMMING CONCEPTS, CLASSES, AND CONSTRUCTORS.", 
+      desc: "CONCEPTS: CLASS DEFINITION, INSTANCE VARIABLES, CONSTRUCTOR OVERLOADING, METHOD OVERLOADING, THIS KEYWORD.", 
+      pdfData: "Week-3.pdf"
+    },
+    { 
+      id: 4, 
+      week: "WEEK 4", 
+      title: "AIM: To implement constructors, method overloading, and observe Garbage Collection", 
+      desc: "CONCEPTS: Default / Parameterized Constructors, Constructor Chaining, 'this' Keyword, Overloading Arithmetic & Area Methods, Object Eligibility for GC.", 
+      pdfData: "Week-04.pdf"
+    },
+    { 
+      id: 5, 
+      week: "WEEK 5", 
+      title: "AIM: INHERITANCE TYPES & METHOD OVERRIDING.", 
+      desc: "CONCEPTS: SINGLE & MULTILEVEL INHERITANCE, SUPER KEYWORD, DYNAMIC METHOD DISPATCH, FINAL KEYWORD.", 
+      pdfData: "Week-05.pdf"
+    },
+    { 
+      id: 6, 
+      week: "WEEK 6", 
+      title: "AIM: ABSTRACT CLASSES AND INTERFACE IMPLEMENTATION.", 
+      desc: "CONCEPTS: ABSTRACT METHODS, MULTIPLE INHERITANCE WITH INTERFACES, DEFAULT & STATIC METHODS.", 
+      pdfData: "Week-6.pdf"
+    },
+    { 
+      id: 7, 
+      week: "WEEK 7", 
+      title: "AIM: String Handling.", 
+      desc: "CONCEPTS: STRING METHODS, STRINGBUFFER, STRINGBUILDER.", 
+      pdfData: "Week-7.pdf"
+    },
+    { 
+      id: 8, 
+      week: "WEEK 8", 
+      title: "AIM: EXCEPTION HANDLING AND CUSTOM EXCEPTIONS.", 
+      desc: "CONCEPTS: TRY, CATCH, FINALLY, THROW, THROWS, CHECKED AND UNCHECKED EXCEPTIONS.", 
+      pdfData: "Week-8.pdf"
+    },
+    { 
+      id: 9, 
+      week: "WEEK 9", 
+      title: "AIM: MULTITHREADING AND SYNCHRONIZATION.", 
+      desc: "CONCEPTS: THREAD CLASS, RUNNABLE INTERFACE, THREAD PRIORITIES, SYNCHRONIZED BLOCKS.", 
+      pdfData: "Week-09.pdf"
+    },
+    { 
+      id: 10, 
+      week: "WEEK 10", 
+      title: "AIM: PACKAGES AND ACCESS MODIFIERS.", 
+      desc: "CONCEPTS: USER-DEFINED PACKAGES, CLASSPATH, PUBLIC, PRIVATE, PROTECTED, DEFAULT SCOPES.", 
+      pdfData: "Week-10.pdf"
+    },
+    { 
+      id: 11, 
+      week: "WEEK 11", 
+      title: "AIM: COLLECTION FRAMEWORK BASICS.", 
+      desc: "CONCEPTS: ARRAYLIST, LINKEDLIST, HASHMAP, ITERATOR INTERFACE.", 
+      pdfData: "Week-11.pdf"
+    }
+  ];
+
+  // Refresh local storage version
+  localStorage.setItem('java_lab_assignments_v15', JSON.stringify(defaultAssignments));
+  let assignments = defaultAssignments;
+
+  let currentActiveItem = null;
+  let currentObjectUrl = null;
+
+  function renderAssignments(list = assignments) {
+    const grid = document.getElementById('assignmentGrid');
+    grid.innerHTML = '';
+
+    list.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openDetailCard(item.id);
+      card.innerHTML = `
+        <div>
+          <div class="card-header-flex">
+            <span class="card-week">${item.week}</span>
+            <button class="btn-danger" onclick="deleteAssignment(${item.id}, event)">Delete</button>
+          </div>
+          <div class="card-title">${item.title}</div>
+          <div class="card-desc">${item.desc}</div>
+        </div>
+        <button class="btn" style="width: 100%; margin-top: 10px;">View Assignment Details →</button>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function openDetailCard(id) {
+    const item = assignments.find(a => a.id === id);
+    if (!item) return;
+
+    currentActiveItem = item;
+    document.getElementById('detailWeek').innerText = item.week;
+    document.getElementById('detailAim').innerText = item.title.startsWith("AIM:") ? item.title : `AIM: ${item.title}`;
+    document.getElementById('detailConcepts').innerText = item.desc.startsWith("CONCEPTS:") ? item.desc : `CONCEPTS: ${item.desc}`;
+
+    const downloadBtnCard = document.getElementById('downloadBtnCard');
+    if (item.pdfData) {
+      downloadBtnCard.href = item.pdfData;
+      downloadBtnCard.download = `${item.week}_Assignment.pdf`;
+    } else {
+      downloadBtnCard.href = "#";
+    }
+
+    document.getElementById('detailOverlay').classList.add('active');
+  }
+
+  function closeDetailCard() {
+    document.getElementById('detailOverlay').classList.remove('active');
+  }
+
+  function dataURLtoBlob(dataurl) {
+    try {
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], {type:mime});
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function openPdfFromCard() {
+    if (!currentActiveItem) return;
+
+    document.getElementById('modalConceptTitle').innerText = currentActiveItem.desc.replace(/^CONCEPTS:\s*/i, '');
+    const viewer = document.getElementById('pdfViewer');
+
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+
+    const fileUrl = currentActiveItem.pdfData;
+
+    if (fileUrl && fileUrl.startsWith('data:application/pdf')) {
+      const blob = dataURLtoBlob(fileUrl);
+      if (blob) {
+        currentObjectUrl = URL.createObjectURL(blob);
+        viewer.src = currentObjectUrl + "#toolbar=0&navpanes=0&scrollbar=1&view=FitH";
+      } else {
+        viewer.src = fileUrl + "#toolbar=0&navpanes=0&scrollbar=1&view=FitH";
+      }
+    } else if (fileUrl) {
+      viewer.src = fileUrl + "#toolbar=0&navpanes=0&scrollbar=1&view=FitH";
+    } else {
+      viewer.src = `data:text/html;charset=utf-8,<body style="background:%23070a12;color:%23fff;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;text-align:center;"><div><h2 style="color:%233b82f6;margin-bottom:10px;">No Document Connected</h2><p style="color:%239ca3af;">Please attach a PDF file for ${currentActiveItem.week}.</p></div></body>`;
+    }
+
+    document.getElementById('viewModal').classList.add('active');
+  }
+
+  function closeViewModal() {
+    document.getElementById('viewModal').classList.remove('active');
+    document.getElementById('pdfViewer').src = '';
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  function openAddModal() {
+    document.getElementById('addModal').classList.add('active');
+  }
+
+  function closeAddModal() {
+    document.getElementById('addModal').classList.remove('active');
+    document.getElementById('addForm').reset();
+  }
+
+  function saveAssignment(e) {
+    e.preventDefault();
+    const fileInput = document.getElementById('addPdfFile');
+    const urlInput = document.getElementById('addPdfUrl').value.trim();
+    const file = fileInput.files[0];
+
+    const weekVal = document.getElementById('addWeek').value;
+    const titleVal = document.getElementById('addTitle').value;
+    const descVal = document.getElementById('addDesc').value;
+
+    const commitSave = (pdfDataStr) => {
+      const existingIdx = assignments.findIndex(a => a.week.toLowerCase() === weekVal.toLowerCase());
+      
+      if (existingIdx !== -1) {
+        assignments[existingIdx].title = titleVal;
+        assignments[existingIdx].desc = descVal;
+        if (pdfDataStr) assignments[existingIdx].pdfData = pdfDataStr;
+      } else {
+        assignments.push({
+          id: Date.now(),
+          week: weekVal,
+          title: titleVal,
+          desc: descVal,
+          pdfData: pdfDataStr || ""
+        });
+      }
+
+      localStorage.setItem('java_lab_assignments_v15', JSON.stringify(assignments));
+      renderAssignments();
+      closeAddModal();
+    };
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        commitSave(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      commitSave(urlInput);
+    }
+  }
+
+  function deleteAssignment(id, event) {
+    event.stopPropagation();
+    if (confirm("Are you sure you want to delete this assignment?")) {
+      assignments = assignments.filter(a => a.id !== id);
+      localStorage.setItem('java_lab_assignments_v15', JSON.stringify(assignments));
+      renderAssignments();
+    }
+  }
+
+  function filterAssignments() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = assignments.filter(a => 
+      a.week.toLowerCase().includes(query) || 
+      a.title.toLowerCase().includes(query) ||
+      a.desc.toLowerCase().includes(query)
+    );
+    renderAssignments(filtered);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeViewModal();
+      closeDetailCard();
+      closeAddModal();
+    }
+  });
+
+  renderAssignments();
+</script>
+</body>
+</html>
